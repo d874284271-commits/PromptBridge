@@ -1,0 +1,22 @@
+{
+  "scenarios": [
+    "ui-refinement",
+    "panel-failure-status",
+    "external-selection-flow",
+    "full-input-flow",
+    "automatic-flow",
+    "native-ime",
+    "editor-undo",
+    "language-combo-composition",
+    "settings-recovery",
+    "settings-interactions",
+    "settings-ime",
+    "adaptive-layout",
+    "small-screen",
+    "brand-assets",
+    "copy-preview",
+    "cli-editor",
+    "cli-launcher",
+    "cli-settings"
+  ]
+}

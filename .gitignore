@@ -1,0 +1,19 @@
+.build/
+.swiftpm/
+dist/
+.DS_Store
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+config/providers.json
+config/.providers.json.*
+config/preferences.json
+config/.preferences.json.*
+
+# Local discovery indexes and signing material
+.codegraph/
+*.p12
+*.pfx
+*.keychain-db

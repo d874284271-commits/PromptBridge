@@ -1,0 +1,61 @@
+name: Signed release candidate
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version (three numbers)
+        default: '0.9.0'
+        required: true
+      app_build:
+        description: Main application build
+        default: '49'
+        required: true
+      component_build:
+        description: Accessibility component build
+        default: '21'
+        required: true
+permissions:
+  contents: read
+concurrency: signed-release
+jobs:
+  package:
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Import private release identity
+        env:
+          SIGNING_P12: ${{ secrets.PB_SIGNING_P12_BASE64 }}
+          SIGNING_PASSWORD: ${{ secrets.PB_SIGNING_P12_PASSWORD }}
+        run: |
+          set -euo pipefail
+          test -n "$SIGNING_P12"
+          umask 077
+          printf '%s' "$SIGNING_P12" | base64 --decode > "$RUNNER_TEMP/release.p12"
+          security create-keychain -p "$SIGNING_PASSWORD" "$RUNNER_TEMP/release.keychain-db"
+          security set-keychain-settings -lut 1800 "$RUNNER_TEMP/release.keychain-db"
+          security unlock-keychain -p "$SIGNING_PASSWORD" "$RUNNER_TEMP/release.keychain-db"
+          security import "$RUNNER_TEMP/release.p12" -k "$RUNNER_TEMP/release.keychain-db" -P "$SIGNING_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$SIGNING_PASSWORD" "$RUNNER_TEMP/release.keychain-db"
+          security list-keychains -d user -s "$RUNNER_TEMP/release.keychain-db"
+      - name: Build and package
+        env:
+          CERTIFICATE: ${{ secrets.PB_SIGNING_CERTIFICATE_SHA1 }}
+          VERSION: ${{ inputs.version }}
+          APP_BUILD: ${{ inputs.app_build }}
+          COMPONENT_BUILD: ${{ inputs.component_build }}
+        run: |
+          python3 scripts/build-desktop.py --certificate "$CERTIFICATE" --app-version "$VERSION" --app-build "$APP_BUILD" --component-build "$COMPONENT_BUILD" --no-publish-current
+          python3 scripts/package-release.py --manifest "dist/candidates/desktop-$VERSION-build$APP_BUILD.json"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: signed-release-candidate
+          path: |
+            dist/*.zip
+            dist/*.sha256
+            dist/*.json
+      - name: Remove private signing material
+        if: always()
+        run: |
+          security delete-keychain "$RUNNER_TEMP/release.keychain-db" || true
+          rm -f "$RUNNER_TEMP/release.p12"

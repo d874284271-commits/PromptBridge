@@ -1,0 +1,13 @@
+{
+  "scenarios": [
+    "broker-client-contract",
+    "external-selection-flow",
+    "full-input-flow",
+    "saved-external-draft-open",
+    "translation-preferences",
+    "focus-launcher-visibility",
+    "launcher-drag",
+    "reopen",
+    "draft-recovery"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "scenarios": [
+    "host-text-change",
+    "selection-cycle",
+    "reopen",
+    "manual-after-capture-failure",
+    "manual-reopen-after-capture-failure",
+    "native-ime",
+    "settings-ime",
+    "position",
+    "collapsed-launcher",
+    "long-draft",
+    "small-screen",
+    "fullscreen",
+    "draft-recovery",
+    "editor-undo",
+    "adaptive-layout",
+    "settings-recovery",
+    "settings-form"
+  ]
+}

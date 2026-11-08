@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 安全问题
+    url: https://github.com/d874284271-commits/PromptBridge/security/advisories/new
+    about: 私下报告身份校验、数据泄露或错误目标写入问题

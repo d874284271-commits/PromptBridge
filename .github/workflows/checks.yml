@@ -1,0 +1,26 @@
+name: macOS checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  core:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Build
+        run: swift build
+      - name: Core and integration checks
+        run: |
+          swift run --skip-build DraftCoreChecks
+          swift run --skip-build ReleaseChecks
+          swift run --skip-build CLIEditorChecks
+          swift run --skip-build CLIIntegrationChecks
+          swift run --skip-build AccessibilityContractsChecks
+          swift run --skip-build AccessibilityRuntimeChecks
+          python3 Tests/DesktopPackaging/checks.py
+          python3 Tests/CLIHelperProcess/checks.py
+          python3 scripts/check-api.py
+          python3 scripts/check-models.py

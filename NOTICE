@@ -1,0 +1,11 @@
+PromptBridge
+Copyright 2026 PromptBridge contributors
+
+Licensed under the Apache License, Version 2.0.
+
+The app icon and menu-bar artwork were generated with OpenAI ImageGen and
+refined for this project. The PNG files in Sources/PromptBridge/Resources are
+the maintained artwork sources; AppIcon.icns is derived from AppIcon.png.
+
+The Swift package declares no external package dependencies. macOS system
+frameworks and system-provided symbols remain subject to their respective terms.

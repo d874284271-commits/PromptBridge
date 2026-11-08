@@ -1,0 +1,13 @@
+{
+  "scenarios": [
+    "translation-preferences",
+    "language-combo-events",
+    "language-combo-composition",
+    "focus-launcher-policy",
+    "focus-launcher-visibility",
+    "settings-form",
+    "adaptive-layout",
+    "editor-undo",
+    "draft-recovery"
+  ]
+}
