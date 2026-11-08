@@ -1216,7 +1216,7 @@ private struct CollapsedView: View {
         let stage = presentation.automaticRunning ? presentation.automaticMessage
             : (presentation.cliChecking ? "正在检查 CLI 连接"
                : (presentation.capturing ? "正在读取输入框全文" : (cliEditor.message ?? "等待点击")))
-        return "目标语言：\(settings.preferences.targetLanguage)；\(mode)；\(stage)；全程不发送消息"
+        return "目标语言：\(settings.preferences.targetLanguage)；\(mode)；\(stage)"
     }
     var body: some View {
         Button {
@@ -1226,7 +1226,7 @@ private struct CollapsedView: View {
                 BrandMark().frame(width: 30, height: 30)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(presentation.automaticRunning ? presentation.automaticMessage : (cliEditor.readIntent != nil || presentation.capturing ? "正在读取…" : idleTitle)).font(.system(size: 13, weight: .medium))
-                    Text(presentation.automaticRunning ? "Auto · 全程不发送" : (presentation.successMessage ?? cliEditor.message ?? "\(settings.preferences.automaticTranslationAndReplacement ? "Auto · " : "")译为 \(settings.preferences.targetLanguage)")).font(.system(size: 11))
+                    Text(presentation.automaticRunning ? "Auto · 译为 \(settings.preferences.targetLanguage)" : (presentation.successMessage ?? cliEditor.message ?? "\(settings.preferences.automaticTranslationAndReplacement ? "Auto · " : "")译为 \(settings.preferences.targetLanguage)")).font(.system(size: 11))
                         .foregroundStyle(.secondary).lineLimit(1).help(cliEditor.message ?? settings.preferences.targetLanguage)
                 }
                 Spacer(minLength: 0)
@@ -1247,7 +1247,7 @@ private struct CollapsedView: View {
             guard !interactionBlocked else { return }
             readAndTranslate()
         }
-        .help("\(actionDescription)，全程不发送消息。先点击原应用或已连接的 Terminal CLI 输入框，再点击浮窗。右键可打开已有草稿。")
+        .help("\(actionDescription)。先点击原应用或已连接的 Terminal CLI 输入框，再点击浮窗。右键可打开已有草稿。")
         .contextMenu {
             Button("打开已有草稿", action: open)
             Button("直接输入", action: openManual)
@@ -1375,7 +1375,7 @@ private struct PanelView: View {
                     .font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                 Button("CLI 接入设置", action: openCLISettings)
             }
-            Text(settings.preferences.automaticTranslationAndReplacement ? "Auto 已开启：读取并翻译草稿，然后替换原文，不发送消息。" : "读取后生成译文，由你确认后替换原文，不发送消息。")
+            Text(settings.preferences.automaticTranslationAndReplacement ? "Auto 已开启：读取并翻译草稿，然后替换原文。" : "读取后生成译文，由你确认后替换原文。")
                 .font(.caption).foregroundStyle(.secondary)
         }
         .fixedSize(horizontal: false, vertical: true)
@@ -1427,7 +1427,7 @@ private struct PanelView: View {
                 Spacer(minLength: 8)
                 Text(settings.preferences.automaticTranslationAndReplacement ? "Auto 开启" : "Auto 关闭")
                     .font(.system(size: 11, weight: .medium)).foregroundStyle(.secondary)
-                    .help("Auto 开启时，点击浮窗会读取全文、翻译并替换；关闭后预览并确认。全程不发送。")
+                    .help("Auto 开启时，点击浮窗会读取全文、翻译并替换；关闭后预览并确认。")
             }
             if presentation.availableHeight < 500 {
                 DisclosureGroup("翻译选项") { translationOptions }
@@ -1574,7 +1574,7 @@ private struct PanelView: View {
             }
             .buttonStyle(PrimaryActionStyle())
             .disabled(!display.enabled || (display.action == .cliRead ? presentation.languageIsComposing : composing) || presentation.languagePending)
-            .help(display.action == .generate ? "⌘Return 生成译文；Return 换行。" : "只处理草稿，不发送消息。")
+            .help(display.action == .generate ? "⌘Return 生成译文；Return 换行。" : "")
         }
     }
 }

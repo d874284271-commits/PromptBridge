@@ -316,7 +316,7 @@ public enum ResultValidity: Equatable, Sendable {
         load(incoming)
         markStale("已转入直接输入，请重新生成。")
         captured = snapshot
-        targetLabel = "直接输入 · 不关联外部会话"
+        targetLabel = "直接输入"
         phase = .idle
         message = "当前稿已转入直接输入，原直接输入稿可恢复。"
     }
@@ -351,7 +351,7 @@ public enum ResultValidity: Equatable, Sendable {
         switchEntry(.manual)
         invalidateRequest()
         captured = snapshot
-        targetLabel = "直接输入 · 不关联外部会话"
+        targetLabel = "直接输入"
         phase = resultValidity == .current ? .ready : .idle
         message = "输入原文并生成译文，再复制到需要使用的应用。"
     }
@@ -541,7 +541,7 @@ public enum ResultValidity: Equatable, Sendable {
                 self.resultValidity = .current
                 self.phase = .ready
                 self.message = self.supportsDirectFill(self.captured)
-                    ? "译文已生成，请检查后写入输入框。不会发送消息。"
+                    ? "译文已生成，请检查后写入输入框。"
                     : "译文已生成，可复制到目标输入框。"
             } catch {
                 guard self.requestID == id, self.routeID == expectedRoute,

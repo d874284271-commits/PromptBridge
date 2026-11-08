@@ -34,7 +34,7 @@ struct TranslationPreferencesView: View {
                         VStack(alignment: .leading, spacing: 6) {
                             Toggle("Auto：翻译后自动替换原文", isOn: $session.preferencesDraft.automaticTranslationAndReplacement)
                                 .disabled(session.isComposing)
-                            Text("适用于桌面应用和 CLI。开启后自动读取、翻译并替换；关闭后先检查译文，再确认替换。全程不发送消息。")
+                            Text("适用于桌面应用和 CLI。开启后自动读取、翻译并替换；关闭后先检查译文，再确认替换。")
                                 .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                         }
                         VStack(alignment: .leading, spacing: 6) {

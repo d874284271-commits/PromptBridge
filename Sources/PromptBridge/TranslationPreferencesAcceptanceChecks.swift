@@ -210,10 +210,10 @@ import AccessibilityContracts
         let progressButton = button(in: controller.uiTestWindow, containing: "读取输入框全文")
         let progressRawValue: Any? = progressButton?.accessibilityValue?()
         let progressValue = progressRawValue as? String ?? ""
-        checks.append(("Auto accessibility describes overwrite, language, active stage, and no sending",
+        checks.append(("Auto accessibility describes replacement, language, and active stage",
                        (progressButton?.accessibilityLabel?() ?? nil)?.contains("翻译并替换") == true
                        && progressValue.contains("Auto 已开启") && progressValue.contains(settings.preferences.targetLanguage)
-                       && progressValue.contains("正在翻译") && progressValue.contains("全程不发送")))
+                       && progressValue.contains("正在翻译")))
         let filled = await wait { workflow.phase == .filled && !controller.isBusy }
         checks.append(("desktop Auto fills the whole input once without confirmation", filled && wire.writeCount == 1
                        && router.external.snapshot()?.fullText == workflow.output && workflow.replacementRecord?.status == .confirmed))
@@ -352,7 +352,7 @@ import AccessibilityContracts
                             checks.append(("\(kind.rawValue) consent accessibility matches Auto=\(automatic)",
                                            label.contains("翻译并替换") == automatic
                                            && value.contains(automatic ? "Auto 已开启" : "Auto 已关闭")
-                                           && value.contains(cliSettings.preferences.targetLanguage) && value.contains("全程不发送")))
+                                           && value.contains(cliSettings.preferences.targetLanguage)))
                         }
                         let pressed = pressConsent(in: cli.uiTestWindow, label: "读取")
                         let authorized = await wait { FileManager.default.fileExists(atPath: CLIEditorExchange.file("permission.json", for: requestURL).path) }

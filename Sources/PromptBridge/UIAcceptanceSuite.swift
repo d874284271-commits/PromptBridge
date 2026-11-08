@@ -1614,7 +1614,7 @@ import SwiftUI
             let rawValue: Any? = action.accessibilityValue?()
             let value = rawValue as? String ?? ""
             try check(label.contains("翻译并替换") == automatic && value.contains(automatic ? "Auto 已开启" : "Auto 已关闭")
-                      && value.contains(preferences.targetLanguage) && value.contains("全程不发送"),
+                      && value.contains(preferences.targetLanguage),
                       "collapsed launcher accessibility matches Auto=\(automatic) and its target language")
         }
         await panel.open()
