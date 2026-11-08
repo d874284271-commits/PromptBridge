@@ -92,8 +92,12 @@ class FixtureHandler(BaseHTTPRequestHandler):
             return
 
         if path.endswith("/models-slow-pages"):
-            time.sleep(0.08)
-            self.send_bytes(json.dumps({"data": [{"id": "first"}], "has_more": True, "last_id": "first"}).encode())
+            # Each page fits the one-second budget; both pages exceed it together.
+            # Leave enough headroom for the first request on a shared CI runner.
+            time.sleep(0.6)
+            page = ({"data": [{"id": "second"}], "has_more": False} if query
+                    else {"data": [{"id": "first"}], "has_more": True, "last_id": "first"})
+            self.send_bytes(json.dumps(page).encode())
             return
 
         expected = None

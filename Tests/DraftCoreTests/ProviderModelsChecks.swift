@@ -118,7 +118,7 @@ func runProviderModelsChecks(baseURL: String) async -> [String] {
                             client: ProviderModelsClient(timeout: 0.12))
 
     await expectListFailure("overall pagination timeout", configuration: configuration(path: "models-slow-pages"), expected: .timeout,
-                            client: ProviderModelsClient(timeout: 0.12))
+                            client: ProviderModelsClient(timeout: 1))
 
     do {
         let task = Task { try await ProviderModelsClient(timeout: 5).list(using: configuration(path: "models-cancel")) }

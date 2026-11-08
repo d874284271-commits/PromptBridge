@@ -675,10 +675,11 @@ import AccessibilityContracts
             let e = ExternalInput(access: f)
             try await e.captureFullInput()
             guard let s = e.snapshot() else { throw ExternalInputError.unavailable }
+            var focusReturn: Task<Void, Never>?
             e.onReplacementStage = { stage in
                 if stage == .verifying {
                     f.focusChangesInput = true
-                    Task { @MainActor in
+                    focusReturn = Task { @MainActor in
                         try? await Task.sleep(for: .milliseconds(15))
                         f.focusChangesInput = false
                     }
@@ -688,7 +689,7 @@ import AccessibilityContracts
                 _ = try await e.replaceSelection(with: "FOCUS ABA ENGLISH", expected: s)
                 record("unnotified focus ABA observed by verification stays unknown", false)
             } catch FillError.outcomeUnknown {
-                try await Task.sleep(for: .milliseconds(25))
+                await focusReturn?.value
                 record("unnotified focus ABA observed by verification stays unknown",
                        !f.focusChangesInput && f.writeCount == 1)
             } catch { record("unnotified focus ABA observed by verification stays unknown", false) }
@@ -699,11 +700,12 @@ import AccessibilityContracts
             let e = ExternalInput(access: f)
             try await e.captureFullInput()
             guard let s = e.snapshot() else { throw ExternalInputError.unavailable }
+            var textReturn: Task<Void, Never>?
             e.onReplacementStage = { stage in
                 if stage == .verifying {
                     f.fullDraft = s.fullText
                     f.range = CFRange(location: 0, length: 0)
-                    Task { @MainActor in
+                    textReturn = Task { @MainActor in
                         try? await Task.sleep(for: .milliseconds(15))
                         f.fullDraft = "TEXT ABA ENGLISH"
                     }
@@ -713,7 +715,7 @@ import AccessibilityContracts
                 _ = try await e.replaceSelection(with: "TEXT ABA ENGLISH", expected: s)
                 record("unnotified original reversion after an observed write stays unknown", false)
             } catch FillError.outcomeUnknown {
-                try await Task.sleep(for: .milliseconds(25))
+                await textReturn?.value
                 record("unnotified original reversion after an observed write stays unknown",
                        f.fullDraft == "TEXT ABA ENGLISH" && f.writeCount == 1)
             } catch { record("unnotified original reversion after an observed write stays unknown", false) }
